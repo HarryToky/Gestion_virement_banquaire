@@ -39,7 +39,7 @@ class AuthentificationController extends AbstractController
         $data = [];
 
         $data = [
-            'id' => $client->getId(),
+            'id' => $client->getId(), 
             'numeroCompte' => $client->getNumeroCompte(),
             'nomClient' => $client->getNomClient(),
             'solde' => $client->getSolde(),
