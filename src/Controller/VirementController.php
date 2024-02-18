@@ -45,7 +45,7 @@ class VirementController extends AbstractController
 
         $this->entityManager->persist($virement);
         $this->entityManager->flush();
-        
+
         return $this->json(['message' => 'Virement ajouté avec succès'], Response::HTTP_CREATED);
     }
 
@@ -68,5 +68,77 @@ class VirementController extends AbstractController
         }
 
         return new JsonResponse($data);
+    }
+
+    #[Route('/modifierVirement/{id}', name: 'modifierVirement', methods: ['PUT'])]
+    public function modifierVirement(Request $request, int $id): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $virement = $this->entityManager->getRepository(Virement::class)->find($id);
+
+        if (!$virement) {
+            return new JsonResponse(['message' => 'Numero de Compte non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!isset($data['numeroCompte'])) {
+            return new JsonResponse(['message' => 'Numéro de compte non fourni'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $numeroCompte = $data['numeroCompte'];
+        $client = $this->entityManager->getRepository(Client::class)->findOneBy(['numeroCompte' => $numeroCompte]);
+
+        if (!$client) {
+            return new JsonResponse(['message' => 'Client non trouvé pour le numéro de compte fourni'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (isset($data['montant'])) {
+            $differenceMontant = $data['montant'] - $virement->getMontant();
+
+            $virement->setMontant($data['montant']);
+
+            $nouveauSolde = $client->getSolde() + $differenceMontant;
+            $client->setSolde($nouveauSolde);
+        }
+
+        if (isset($data['date'])) {
+            $dateVirementString = $request->request->get('date');
+            $dateVirement = new \DateTimeImmutable($dateVirementString); // Ou new \DateTime($dateVirementString) si vous utilisez DateTime
+
+            $virement->setDateVirement($dateVirement);
+        }
+
+        $this->entityManager->flush();
+
+        $responseData = [
+            'id' => $virement->getId(),
+            'numeroVirement' => $virement->getNumeroVirement(),
+            'numeroCompte' => $virement->getNumeroCompte(),
+            'montant' => $virement->getMontant(),
+            'dateVirement' => $virement->getDateVirement()
+        ];
+
+        return new JsonResponse(['virement' => $responseData, 'message' => 'Virement modifié avec succès'], Response::HTTP_OK);
+    }
+
+    #[Route('/supprimerVirement/{id}', name: 'supprimerVirement', methods: ['DELETE'])]
+    public function supprimerVirement(Virement $virement, int $id): Response
+    {
+        $numeroCompte = $virement->getNumeroCompte();
+
+        $client = $this->entityManager->getRepository(Client::class)->findOneBy(['numeroCompte' => $numeroCompte]);
+
+        if (!$client) {
+            return new JsonResponse(['message' => 'Client non trouvé pour ce virement'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Soustraire le montant du virement du solde du client
+        $nouveauSolde = $client->getSolde() - $virement->getMontant();
+        $client->setSolde($nouveauSolde);
+
+        $this->entityManager->remove($virement);
+        $this->entityManager->flush();
+
+        return $this->json(['message' => 'Virement supprimé avec succès, et le solde du client a été mis à jour'], Response::HTTP_OK);
     }
 }
