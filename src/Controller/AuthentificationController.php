@@ -26,15 +26,11 @@ class AuthentificationController extends AbstractController
         $check = true;
         $client = $this->entityManager->getRepository(Client::class)->findOneBy(["email" => $request->request->get('email')]);
 
-        if(!$client) {
+        if(!$client || !$mdpHasher->isPasswordValid($client, $request->request->get('password'))) {
             $check = false;
-            return $this->json(['message' => "L'email entré n'existe pas", 'check' => $check], Response::HTTP_OK);
+            return $this->json(['message' => "L'email ou le mot de passe est erroné", 'check' => $check], Response::HTTP_OK);
         }
 
-        if (!$mdpHasher->isPasswordValid($client, $request->request->get('password'))) {
-            $check = false;
-            return $this->json(['message' => 'Mot de passe invalide', 'check' => $check], Response::HTTP_OK);
-        }
 
         $data = [];
 

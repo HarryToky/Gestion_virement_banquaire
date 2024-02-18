@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Virement;
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,35 @@ class VirementController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/ajouterVirement')]
+    #[Route('/ajouterVirement', name: 'ajouterVirement', methods: ['POST'])]
+    public function ajouterVierement(Request $request): Response
+    {
+        $numeroVirement = $request->request->get('numeroVirement');
+        $numeroCompte = $request->request->get('numeroCompte');
+        $montant = $request->request->get('montant');
+        $dateViremnt = new \DateTime($request->request->get('dateVirement'));
+
+        $client = $this->entityManager->getRepository(Client::class)->findOneBy(['numeroCompte' => $numeroCompte]);
+
+        if (!$client) {
+            return $this->json(['error' => 'Le numéro de compte spécifié n\'existe pas.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $virement = new Virement();
+        $virement->setNumeroVirement($numeroVirement);
+        $virement->setNumeroCompte($numeroCompte);
+        $virement->setMontant($montant);
+        $virement->setDateVirement($dateViremnt);
+
+        $nouveauSolde = $client->getSolde() + $montant;
+        $client->setSolde($nouveauSolde);
+
+        $this->entityManager->persist($virement);
+        $this->entityManager->flush();
+        
+        return $this->json(['message' => 'Virement ajouté avec succès'], Response::HTTP_CREATED);
+    }
+
 
     #[Route('/afficherVirement', name: 'afficherVirement', methods: ['GET'])]
     public function afficheVirement(): Response
@@ -28,7 +57,7 @@ class VirementController extends AbstractController
 
         $data = [];
 
-        foreach($virements as $virement) {
+        foreach ($virements as $virement) {
             $data = [
                 'id' => $virement->getId(),
                 'numeroVirement' => $virement->getNumeroVirement(),
@@ -39,6 +68,5 @@ class VirementController extends AbstractController
         }
 
         return new JsonResponse($data);
-
     }
 }
