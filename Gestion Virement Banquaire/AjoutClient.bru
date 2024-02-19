@@ -1,0 +1,26 @@
+meta {
+  name: AjoutClient
+  type: http
+  seq: 1
+}
+
+post {
+  url: 127.0.0.1:8000/ajouterClient
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nomClient": "RAKOTOININA Chistiano",
+    "email": "christianorak@gmail.com",
+    "mdp": "test123"
+  }
+}
+
+body:multipart-form {
+  nomClient: RAKOTONIANA
+  solde: 0
+  email: christianorak@gmail.com
+  mdp: test123
+}

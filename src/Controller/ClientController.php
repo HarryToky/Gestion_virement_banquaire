@@ -30,7 +30,7 @@ class ClientController extends AbstractController
 
         // Récupérer les données du formulaire
         $nomClient = $data['nomClient'];
-        $solde = $data['solde'];
+        $solde = 0;
         $email = $data['email'];
         $mdp = $data['mdp'];
         // Générer un numéro de compte aléatoire

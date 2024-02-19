@@ -21,12 +21,12 @@ class VirementController extends AbstractController
     }
 
     #[Route('/ajouterVirement', name: 'ajouterVirement', methods: ['POST'])]
-    public function ajouterVierement(Request $request): Response
+    public function ajouterVirement(Request $request): Response
     {
         $numeroVirement = $request->request->get('numeroVirement');
         $numeroCompte = $request->request->get('numeroCompte');
         $montant = $request->request->get('montant');
-        $dateViremnt = new \DateTime($request->request->get('dateVirement'));
+        $dateVirement = new \DateTime($request->request->get('dateVirement'));
 
         $client = $this->entityManager->getRepository(Client::class)->findOneBy(['numeroCompte' => $numeroCompte]);
 
@@ -38,7 +38,7 @@ class VirementController extends AbstractController
         $virement->setNumeroVirement($numeroVirement);
         $virement->setNumeroCompte($numeroCompte);
         $virement->setMontant($montant);
-        $virement->setDateVirement($dateViremnt);
+        $virement->setDateVirement($dateVirement);
 
         $nouveauSolde = $client->getSolde() + $montant;
         $client->setSolde($nouveauSolde);
