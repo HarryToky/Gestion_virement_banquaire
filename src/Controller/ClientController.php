@@ -26,11 +26,13 @@ class ClientController extends AbstractController
     #[Route('/ajouterClient', name: 'ajouterClient', methods: ['POST'])]
     public function ajouterClient(Request $request): Response
     {
+        $data = json_decode($request->getContent(), true);
+
         // Récupérer les données du formulaire
-        $nomClient = $request->request->get('nomClient');
-        $solde = $request->request->get('solde');
-        $email = $request->request->get('email');
-        $mdp = $request->request->get('mdp');
+        $nomClient = $data['nomClient'];
+        $solde = $data['solde'];
+        $email = $data['email'];
+        $mdp = $data['mdp'];
         // Générer un numéro de compte aléatoire
         $numeroCompte = '';
         for ($i = 0; $i <= 15; $i++) {
@@ -69,7 +71,8 @@ class ClientController extends AbstractController
                 'id' => $client->getId(),
                 'nomClient' => $client->getNomClient(),
                 'numeroCompte' => $client->getNumeroCompte(),
-                'email' => $client->getEmail()
+                'email' => $client->getEmail(),
+                'solde' => $client->getSolde()
             ];
         }
 
