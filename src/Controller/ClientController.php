@@ -76,7 +76,6 @@ class ClientController extends AbstractController
             ];
         }
 
-
         return new JsonResponse($data);
     }
 

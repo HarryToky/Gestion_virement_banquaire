@@ -23,10 +23,16 @@ class VirementController extends AbstractController
     #[Route('/ajouterVirement', name: 'ajouterVirement', methods: ['POST'])]
     public function ajouterVirement(Request $request): Response
     {
-        $numeroVirement = $request->request->get('numeroVirement');
-        $numeroCompte = $request->request->get('numeroCompte');
-        $montant = $request->request->get('montant');
-        $dateVirement = new \DateTime($request->request->get('dateVirement'));
+        $data = json_decode($request->getContent(), true);
+
+        $numeroCompte = $data['numeroCompte'];
+        $montant = $data['montant'];
+        $dateVirement = new \DateTime(date("Y/m/d"));
+
+        $numeroVirement = '';
+        for ($i = 0; $i <= 6; $i++) {
+            $numeroVirement .= mt_rand(0, 9);
+        }
 
         $client = $this->entityManager->getRepository(Client::class)->findOneBy(['numeroCompte' => $numeroCompte]);
 
