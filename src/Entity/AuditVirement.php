@@ -20,8 +20,8 @@ class AuditVirement
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateOperation = null;
 
-    #[ORM\Column]
-    private ?int $numeroVirement = null;
+    #[ORM\Column(length: 255)]
+    private ?string $numeroVirement = null;
 
     #[ORM\Column]
     private ?int $numeroCompte = null;
@@ -70,12 +70,12 @@ class AuditVirement
         return $this;
     }
 
-    public function getNumeroVirement(): ?int
+    public function getNumeroVirement(): ?string
     {
         return $this->numeroVirement;
     }
 
-    public function setNumeroVirement(int $numeroVirement): static
+    public function setNumeroVirement(string $numeroVirement): static
     {
         $this->numeroVirement = $numeroVirement;
 

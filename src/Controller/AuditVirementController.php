@@ -20,7 +20,6 @@ class AuditVirementController extends AbstractController
     }
 
     #[Route('/afficherAuditVirements', name: 'afficherAuditVirements', methods:['GET'])]
-    
     public function afficherClients(): JsonResponse
     {
         $auditVirements = $this->entityManager->getRepository(AuditVirement::class)->findAll();

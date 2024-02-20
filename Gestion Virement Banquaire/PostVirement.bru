@@ -1,0 +1,18 @@
+meta {
+  name: PostVirement
+  type: http
+  seq: 4
+}
+
+post {
+  url: 127.0.0.1:8000/ajouterVirement
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "numeroCompte": "6565230805338169",
+    "montant": "1000.0"
+  }
+}
