@@ -129,3 +129,5 @@ class ClientController extends AbstractController
         return $this->json(['message' => 'Client Supprimer avec succès'], Response::HTTP_OK);
     }
 }
+
+
