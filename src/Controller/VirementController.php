@@ -58,7 +58,7 @@ class VirementController extends AbstractController
         $data = [];
 
         foreach ($virements as $virement) {
-            $data = [
+            $data[] = [
                 'id' => $virement->getId(),
                 'numeroVirement' => $virement->getNumeroVirement(),
                 'numeroCompte' => $virement->getNumeroCompte(),
@@ -69,6 +69,7 @@ class VirementController extends AbstractController
 
         return new JsonResponse($data);
     }
+
 
     #[Route('/modifierVirement/{id}', name: 'modifierVirement', methods: ['PUT'])]
     public function modifierVirement(Request $request, int $id): Response
