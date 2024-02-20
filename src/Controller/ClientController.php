@@ -32,7 +32,7 @@ class ClientController extends AbstractController
         $nomClient = $data['nomClient'];
         $solde = 0;
         $email = $data['email'];
-        $mdp = $data['mdp'];
+        $mdp = 'test123';
         // Générer un numéro de compte aléatoire
         $numeroCompte = '';
         for ($i = 0; $i <= 15; $i++) {
