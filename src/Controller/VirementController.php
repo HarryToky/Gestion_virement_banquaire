@@ -55,11 +55,10 @@ class VirementController extends AbstractController
         return $this->json(['message' => 'Virement ajouté avec succès'], Response::HTTP_CREATED);
     }
 
-
     #[Route('/afficherVirement', name: 'afficherVirement', methods: ['GET'])]
     public function afficheVirement(): Response
     {
-        $virements = $this->entityManager->getRepository(Virement::class)->findAll();
+        $virements = $this->entityManager->getRepository(Virement::class)->findAllOrderById();
 
         $data = [];
 

@@ -36,13 +36,8 @@ class VirementRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Virement
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findAllOrderById(): ?array
+    {
+        return $this->createQueryBuilder('v')->orderBy('v.id')->getQuery()->getResult();
+    }
 }
