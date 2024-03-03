@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
 class VirementController extends AbstractController
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, private LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
     }
@@ -28,6 +29,8 @@ class VirementController extends AbstractController
         $numeroCompte = $data['numeroCompte'];
         $montant = $data['montant'];
         $dateVirement = new \DateTime(date("Y/m/d"));
+
+        $this->logger->info("hello" . $numeroCompte);
 
         $numeroVirement = '';
         for ($i = 0; $i <= 6; $i++) {
